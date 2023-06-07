@@ -1,4 +1,5 @@
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express, { Application } from 'express';
 import helmet from 'helmet';
 
@@ -30,6 +31,7 @@ export class ExpressFramework {
   }
 
   private middlewaresBeforeRoutes(): void {
+    this.app.use(cors({ origin: '*' }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
