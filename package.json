@@ -23,7 +23,7 @@
     "prisma:studio": "prisma studio",
     "prisma:format": "prisma format",
     "start:dev": "tsx watch src/server.ts",
-    "start:prod": "node dist/main/server.js",
+    "start:prod": "node dist/server.js",
     "test": "jest --colors --no-cache --passWithNoTests --detectOpenHandles --runInBand",
     "test:coverage": "jest --colors --no-cache --passWithNoTests --detectOpenHandles --runInBand --coverage --silent",
     "test:watch": "jest --colors --passWithNoTests --detectOpenHandles --runInBand --watch --verbose false"
