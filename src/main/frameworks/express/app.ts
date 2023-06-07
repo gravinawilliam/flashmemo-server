@@ -24,7 +24,7 @@ export class ExpressFramework {
 
     this.middlewaresAfterRoutes();
 
-    this.app.listen(GLOBAL_CONFIG.APP_PORT, () => showBanner());
+    this.app.listen(GLOBAL_CONFIG.APP_PORT, '0.0.0.0', () => showBanner());
 
     return this.app;
   }
