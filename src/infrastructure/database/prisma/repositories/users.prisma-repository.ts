@@ -30,7 +30,8 @@ export class UsersPrismaRepository implements IFindByEmailUsersRepository, ISave
         select: {
           id: true,
           email: true,
-          password: true
+          password: true,
+          name: true
         }
       });
 
@@ -44,6 +45,7 @@ export class UsersPrismaRepository implements IFindByEmailUsersRepository, ISave
         user: {
           id: new Id({ id: foundUser.id }),
           email: emailValidated,
+          name: foundUser.name,
           password: new Password({
             isEncrypted: true,
             password: foundUser.password

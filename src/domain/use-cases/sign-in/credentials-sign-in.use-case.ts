@@ -50,12 +50,14 @@ export class CredentialsSignInUseCase extends UseCase<
       return failure(new SignInError({ motive: SignInErrorMotive.PASSWORD_NOT_MATCH }));
     }
 
-    return success({ user: { id: user.id } });
+    return success({ user: { id: user.id, email: user.email, name: user.name } });
   }
 
   private async findUser(parameters: {
     email: string;
-  }): Promise<Either<RepositoryError | InvalidEmailError | SignInError, { user: Pick<User, 'id' | 'password'> }>> {
+  }): Promise<
+    Either<RepositoryError | InvalidEmailError | SignInError, { user: Pick<User, 'id' | 'password' | 'email' | 'name'> }>
+  > {
     const resultValidateEmail = Email.validate({
       email: parameters.email
     });
@@ -67,7 +69,7 @@ export class CredentialsSignInUseCase extends UseCase<
     if (result.value.user === undefined) return failure(new SignInError({ motive: SignInErrorMotive.EMAIL_NOT_FOUND }));
     const { user } = result.value;
 
-    return success({ user: { id: user.id, password: user.password } });
+    return success({ user: { id: user.id, password: user.password, email: user.email, name: user.name } });
   }
 }
 
@@ -77,7 +79,7 @@ export namespace CredentialsSignInUseCaseDTO {
   }>;
 
   export type ResultFailure = RepositoryError | InvalidEmailError | SignInError | ProviderError | InvalidPasswordError;
-  export type ResultSuccess = Readonly<{ user: Pick<User, 'id'> }>;
+  export type ResultSuccess = Readonly<{ user: Pick<User, 'email' | 'id' | 'name'> }>;
 
   export type Result = Promise<Either<ResultFailure, ResultSuccess>>;
 }

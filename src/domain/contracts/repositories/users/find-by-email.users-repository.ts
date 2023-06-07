@@ -12,7 +12,7 @@ export namespace FindByEmailUsersRepositoryDTO {
 
   export type ResultFailure = Readonly<RepositoryError | InvalidEmailError>;
   export type ResultSuccess = Readonly<{
-    user?: Pick<User, 'id' | 'email' | 'password'>;
+    user?: Pick<User, 'id' | 'email' | 'password' | 'name'>;
   }>;
 
   export type Result = Promise<Either<ResultFailure, ResultSuccess>>;

@@ -49,10 +49,15 @@ export class SignInUseCase extends UseCase<
     return this.generateToken({ user: parameters.user });
   }
 
-  private generateToken(parameters: { user: Pick<User, 'id'> }): Either<ProviderError, { accessToken: string }> {
+  private generateToken(parameters: {
+    user: Pick<User, 'email' | 'id' | 'name'>;
+  }): Either<ProviderError, { accessToken: string; user: Pick<User, 'email' | 'id' | 'name'> }> {
     const resultGenerateJwt = this.tokenProvider.generateJwt({ user: { id: parameters.user.id } });
     if (resultGenerateJwt.isFailure()) return failure(resultGenerateJwt.value);
-    return success({ accessToken: resultGenerateJwt.value.jwtToken });
+    return success({
+      accessToken: resultGenerateJwt.value.jwtToken,
+      user: parameters.user
+    });
   }
 }
 
@@ -62,13 +67,13 @@ export namespace SignInUseCaseDTO {
       email: string;
       password: string;
     };
-    user?: Pick<User, 'id'>;
+    user?: Pick<User, 'email' | 'id' | 'name'>;
   }>;
 
   export type ResultFailure = Readonly<
     RepositoryError | ProviderError | SignInError | InvalidEmailError | InvalidPasswordError
   >;
-  export type ResultSuccess = Readonly<{ accessToken: string }>;
+  export type ResultSuccess = Readonly<{ accessToken: string; user: Pick<User, 'email' | 'id' | 'name'> }>;
 
   export type Result = Promise<Either<ResultFailure, ResultSuccess>>;
 }

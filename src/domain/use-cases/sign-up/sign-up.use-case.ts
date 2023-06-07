@@ -40,17 +40,25 @@ export class SignUpUseCase extends UseCase<
     if (resultValidateEmail.isFailure()) return failure(resultValidateEmail.value);
     const { emailValidated } = resultValidateEmail.value;
 
+    const name = parameters.name.trim();
+
     const resultSaveUser = await this.usersRepository.save({
       user: {
         email: emailValidated,
         password: passwordEncrypted,
-        name: parameters.name.trim()
+        name
       }
     });
     if (resultSaveUser.isFailure()) return failure(resultSaveUser.value);
     const { user } = resultSaveUser.value;
 
-    return success({ user: { id: user.id } });
+    return success({
+      user: {
+        id: user.id,
+        name,
+        email: emailValidated
+      }
+    });
   }
 
   private async validatePassword(parameters: {
@@ -94,7 +102,7 @@ export namespace SignUpUseCaseDTO {
     RepositoryError | ProviderError | InvalidEmailError | EmailAlreadyExistsError | InvalidPasswordError
   >;
   export type ResultSuccess = Readonly<{
-    user: Pick<User, 'id'>;
+    user: Pick<User, 'id' | 'email' | 'name'>;
   }>;
 
   export type Result = Promise<Either<ResultFailure, ResultSuccess>>;

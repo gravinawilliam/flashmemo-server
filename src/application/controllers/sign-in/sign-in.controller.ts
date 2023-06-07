@@ -29,11 +29,21 @@ export class SignInController extends Controller<SignInControllerDTO.Parameters,
       }
     });
     if (resultSignIn.isFailure()) return failure(resultSignIn.value);
-    const { accessToken } = resultSignIn.value;
+    const {
+      accessToken,
+      user: { email, id, name }
+    } = resultSignIn.value;
 
     return success({
-      data: { access_token: accessToken },
-      status: StatusSuccess.DONE
+      status: StatusSuccess.DONE,
+      data: {
+        access_token: accessToken,
+        user: {
+          name,
+          id: id.value,
+          email: email.value
+        }
+      }
     });
   }
 }
@@ -47,7 +57,16 @@ export namespace SignInControllerDTO {
   >;
 
   type ResultError = SignInUseCaseDTO.ResultFailure;
-  type ResultSuccess = Readonly<ResponseSuccess<{ access_token: string }>>;
+  type ResultSuccess = Readonly<
+    ResponseSuccess<{
+      access_token: string;
+      user: {
+        id: string;
+        name: string;
+        email: string;
+      };
+    }>
+  >;
 
   export type Result = Promise<Either<ResultError, ResultSuccess>>;
 }
