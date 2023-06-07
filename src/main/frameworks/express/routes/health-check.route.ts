@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 
-import { HttpStatusCode } from '@main/utils/http-status-code.util';
+import { HttpStatusCode } from '@shared/utils/http-status-code.util';
 
 const router: Router = Router();
 

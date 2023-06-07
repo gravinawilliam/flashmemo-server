@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 
-import { HttpStatusCode } from '@main/utils/http-status-code.util';
-
 import { HttpRequest } from '@shared/types/http-request.type';
 import { HttpResponse } from '@shared/types/http-response.type';
+import { HttpStatusCode } from '@shared/utils/http-status-code.util';
 
 interface IController {
   handle(httpRequest: HttpRequest<any>): Promise<HttpResponse>;

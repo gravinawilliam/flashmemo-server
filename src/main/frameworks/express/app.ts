@@ -2,10 +2,10 @@ import cookieParser from 'cookie-parser';
 import express, { Application } from 'express';
 import helmet from 'helmet';
 
-import { GLOBAL_CONFIG } from '@external/configs/infrastructure.config';
+import { GLOBAL_CONFIG } from '@infrastructure/configs/infrastructure.config';
 
-import { morganMiddleware } from '@main/frameworks/express/middlewares/morgan.middleware';
-import { notFoundRouteMiddleware } from '@main/frameworks/express/middlewares/not-found-route.middleware';
+import { morganMiddleware } from '@main/middlewares/morgan.middleware';
+import { notFoundRouteMiddleware } from '@main/middlewares/not-found-route.middleware';
 import { showBanner } from '@main/utils/banner.util';
 
 import routes from './routes/_index';

@@ -56,7 +56,8 @@ module.exports = {
         'plugin:optimize-regex/recommended',
         'plugin:prettier/recommended',
         'plugin:jest-formatting/strict',
-        'plugin:security/recommended'
+        'plugin:security/recommended',
+        "plugin:jsonc/base"
       ],
       plugins: [
         '@typescript-eslint',
@@ -65,6 +66,7 @@ module.exports = {
         'eslint-comments',
         'unicorn',
         'sonarjs',
+        "jest-formatting",
         'import',
         'promise',
         'optimize-regex',
@@ -75,7 +77,8 @@ module.exports = {
         'unused-imports',
         'deprecation',
         'jest-extended',
-        'eslint-plugin-import-helpers'
+        'eslint-plugin-import-helpers',
+        "jest-async"
       ],
       settings: {
         // Define import resolver for import plugin
@@ -100,6 +103,7 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         'unicorn/no-new-array': 'off',
+        "jest-async/expect-return": "error",
         'unicorn/no-fn-reference-in-iterator': 'off',
         'unicorn/no-array-for-each': 'off',
         'unicorn/consistent-destructuring': 'off',

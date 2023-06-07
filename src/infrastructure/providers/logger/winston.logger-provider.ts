@@ -1,6 +1,4 @@
 import 'winston-daily-rotate-file';
-
-import emoji from 'node-emoji';
 import { addColors, createLogger, format, Logger as WinstonLoggerType, transports } from 'winston';
 
 import {
@@ -15,6 +13,18 @@ import {
   ISendLogInfoLoggerProvider,
   SendLogInfoLoggerProviderDTO
 } from '@contracts/providers/logger/send-log-info-logger.provider';
+import {
+  ISendLogTimeControllerLoggerProvider,
+  SendLogTimeControllerLoggerProviderDTO
+} from '@contracts/providers/logger/send-log-time-controller.logger-provider';
+import {
+  ISendLogTimeUseCaseLoggerProvider,
+  SendLogTimeUseCaseLoggerProviderDTO
+} from '@contracts/providers/logger/send-log-time-use-case.logger-provider';
+
+import { GLOBAL_CONFIG } from '@infrastructure/configs/infrastructure.config';
+
+import { Singleton } from '@shared/utils/singleton.util';
 
 enum LevelName {
   SILLY = 'silly',
@@ -67,37 +77,51 @@ const CONSOLE_FORMAT = format.combine(
 );
 
 export class WinstonLoggerProvider
-  implements ISendLogErrorLoggerProvider, ISendLogInfoLoggerProvider, ISendLogHttpLoggerProvider
+  extends Singleton<WinstonLoggerProvider>()
+  implements
+    ISendLogErrorLoggerProvider,
+    ISendLogInfoLoggerProvider,
+    ISendLogHttpLoggerProvider,
+    ISendLogTimeUseCaseLoggerProvider,
+    ISendLogTimeControllerLoggerProvider
 {
-  private readonly level: string = this.environment.IS_DEVELOPMENT ? LevelName.DEBUG : LevelName.INFO;
+  private readonly level: string = GLOBAL_CONFIG.IS_DEVELOPMENT ? LevelName.DEBUG : LevelName.INFO;
 
-  private readonly logsFolder: string = this.environment.LOGS_FOLDER;
+  private readonly logsFolder: string = GLOBAL_CONFIG.LOGS_FOLDER || 'logs';
 
   private readonly logger: WinstonLoggerType;
 
-  constructor(
-    private readonly environment: {
-      IS_DEVELOPMENT: boolean;
-      LOGS_FOLDER: string;
-    }
-  ) {
+  constructor() {
+    super();
     this.logger = this.configureAndGetLogger();
   }
 
+  public sendLogTimeController(
+    parameters: SendLogTimeControllerLoggerProviderDTO.Parameters
+  ): SendLogTimeControllerLoggerProviderDTO.Result {
+    this.logger.info(`${this.getValue(parameters.message)}`);
+  }
+
+  public sendLogTimeUseCase(
+    parameters: SendLogTimeUseCaseLoggerProviderDTO.Parameters
+  ): SendLogTimeUseCaseLoggerProviderDTO.Result {
+    this.logger.info(`${this.getValue(parameters.message)}`);
+  }
+
   public sendLogInfo(parameters: SendLogInfoLoggerProviderDTO.Parameters): SendLogInfoLoggerProviderDTO.Result {
-    this.logger.info(`${emoji.get('bulb')} ${this.getValue(parameters.message)}`);
+    this.logger.info(`${this.getValue(parameters.message)}`);
   }
 
   public sendLogError(parameters: SendLogErrorLoggerProviderDTO.Parameters): SendLogErrorLoggerProviderDTO.Result {
     if (parameters.value instanceof Error) {
-      this.logger.error(emoji.get('x'), parameters.value);
+      this.logger.error(parameters.value);
     } else {
-      this.logger.error(`${emoji.get('x')} ${this.getValue(parameters.value)}`);
+      this.logger.error(`${this.getValue(parameters.value)}`);
     }
   }
 
   public sendLogHttp(parameters: SendLogHttpLoggerProviderDTO.Parameters): SendLogHttpLoggerProviderDTO.Result {
-    this.logger.http(`${emoji.get('computer')} ${this.getValue(parameters.message)}`);
+    this.logger.http(`${this.getValue(parameters.message)}`);
   }
 
   private configureAndGetLogger = (): WinstonLoggerType => {

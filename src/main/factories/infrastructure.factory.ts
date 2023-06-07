@@ -1,4 +1,4 @@
-import { prisma } from '@external/database/prisma/prisma';
+import { prisma } from '@infrastructure/database/prisma/prisma';
 
 import { makeLoggerProvider } from './providers/logger-provider.factory';
 
