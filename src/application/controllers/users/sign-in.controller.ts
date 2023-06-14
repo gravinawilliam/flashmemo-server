@@ -50,10 +50,13 @@ export class SignInController extends Controller<SignInControllerDTO.Parameters,
 
 export namespace SignInControllerDTO {
   export type Parameters = Readonly<
-    HttpRequest<{
-      email: string;
-      password: string;
-    }>
+    HttpRequest<
+      {
+        email: string;
+        password: string;
+      },
+      undefined
+    >
   >;
 
   type ResultError = SignInUseCaseDTO.ResultFailure;

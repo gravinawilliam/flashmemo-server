@@ -63,16 +63,19 @@ export class CreateFlashcardController extends Controller<
 
 export namespace CreateFlashcardControllerDTO {
   export type Parameters = Readonly<
-    HttpRequest<{
-      collection: Pick<Collection, 'id'>;
-      flashcard: {
-        front: string;
-        responses: {
-          text: string;
-          isCorrect: boolean;
-        }[];
-      };
-    }>
+    HttpRequest<
+      {
+        collection: Pick<Collection, 'id'>;
+        flashcard: {
+          front: string;
+          responses: {
+            text: string;
+            isCorrect: boolean;
+          }[];
+        };
+      },
+      undefined
+    >
   >;
 
   type ResultError = Readonly<VerifyAccessTokenUseCaseDTO.ResultFailure | CreateFlashcardUseCaseDTO.ResultFailure>;

@@ -63,14 +63,17 @@ export class CreateCollectionController extends Controller<
 
 export namespace CreateCollectionControllerDTO {
   export type Parameters = Readonly<
-    HttpRequest<{
-      collection: {
-        name: string;
-        description: string;
-        category: { id: string };
-        privacyStatus: string;
-      };
-    }>
+    HttpRequest<
+      {
+        collection: {
+          name: string;
+          description: string;
+          category: { id: string };
+          privacyStatus: string;
+        };
+      },
+      undefined
+    >
   >;
 
   type ResultError = Readonly<VerifyAccessTokenUseCaseDTO.ResultFailure | CreateCollectionUseCaseDTO.ResultFailure>;

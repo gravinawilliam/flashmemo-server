@@ -57,7 +57,7 @@ export class ListCollectionsController extends Controller<
 }
 
 export namespace ListCollectionsControllerDTO {
-  export type Parameters = Readonly<HttpRequest<undefined>>;
+  export type Parameters = Readonly<HttpRequest<undefined, undefined>>;
 
   type ResultError = Readonly<VerifyAccessTokenUseCaseDTO.ResultFailure | ListCollectionsUseCaseDTO.ResultFailure>;
   type Collections = Pick<Collection, 'id' | 'name' | 'privacyStatus' | 'description'> & {

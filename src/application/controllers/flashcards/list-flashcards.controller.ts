@@ -3,7 +3,6 @@ import { Controller, ResponseSuccess, StatusSuccess } from '@application/control
 import { ISendLogErrorLoggerProvider } from '@contracts/providers/logger/send-log-error-logger.provider';
 import { ISendLogTimeControllerLoggerProvider } from '@contracts/providers/logger/send-log-time-controller.logger-provider';
 
-import { Collection } from '@models/collection.model';
 import { Flashcard, FlashcardResponse } from '@models/flashcard.model';
 
 import { UseCase } from '@use-cases/_shared/use-case';
@@ -43,7 +42,9 @@ export class ListFlashcardsController extends Controller<
     const { user } = resultVerifyAccessToken.value;
 
     const resultListFlashcards = await this.listFlashcardsUseCase.execute({
-      collection: parameters.body.collection,
+      collection: {
+        id: parameters.headers.collection_id
+      },
       user
     });
     if (resultListFlashcards.isFailure()) return failure(resultListFlashcards.value);
@@ -59,9 +60,12 @@ export class ListFlashcardsController extends Controller<
 
 export namespace ListFlashcardsControllerDTO {
   export type Parameters = Readonly<
-    HttpRequest<{
-      collection: Pick<Collection, 'id'>;
-    }>
+    HttpRequest<
+      undefined,
+      {
+        collection_id: string;
+      }
+    >
   >;
 
   type ResultError = Readonly<VerifyAccessTokenUseCaseDTO.ResultFailure | ListFlashcardsUseCaseDTO.ResultFailure>;
