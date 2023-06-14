@@ -20,5 +20,72 @@ model UsersTable {
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
 
+  CollectionsTable CollectionsTable[]
+  FlashcardsTable  FlashcardsTable[]
+
   @@map("users")
+}
+
+model CollectionCategoriesTable {
+  name String @unique @db.VarChar()
+
+  id        String    @id @unique @db.VarChar()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+
+  CollectionsTable CollectionsTable[]
+
+  @@map("collection_categories")
+}
+
+model CollectionsTable {
+  name          String @db.VarChar()
+  categoryId    String @db.VarChar()
+  description   String @db.VarChar()
+  privacyStatus String @map("privacy_status") @db.VarChar()
+  ownerId       String @map("owner_id") @db.VarChar()
+
+  id        String    @id @unique @db.VarChar()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+
+  category        CollectionCategoriesTable @relation(fields: [categoryId], references: [id])
+  owner           UsersTable                @relation(fields: [ownerId], references: [id])
+  FlashcardsTable FlashcardsTable[]
+
+  @@map("collections")
+}
+
+model FlashcardsTable {
+  front        String @db.VarChar()
+  ownerId      String @map("owner_id") @db.VarChar()
+  collectionId String @map("collection_id") @db.VarChar()
+
+  id        String    @id @unique @db.VarChar()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+
+  owner                   UsersTable                @relation(fields: [ownerId], references: [id])
+  collection              CollectionsTable          @relation(fields: [collectionId], references: [id])
+  FlashcardResponsesTable FlashcardResponsesTable[]
+
+  @@map("flashcards")
+}
+
+model FlashcardResponsesTable {
+  text        String  @db.VarChar()
+  flashcardId String  @map("flashcard_id") @db.VarChar()
+  isCorrect   Boolean @map("is_correct") @db.Boolean()
+
+  id        String    @id @unique @db.VarChar()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+
+  flashcard FlashcardsTable @relation(fields: [flashcardId], references: [id])
+
+  @@map("flashcard_responses")
 }

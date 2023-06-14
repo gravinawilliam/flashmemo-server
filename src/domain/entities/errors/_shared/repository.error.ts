@@ -1,20 +1,44 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { StatusError } from './status-error';
 
 type ParametersConstructorDTO = {
   error?: Error;
   repository: {
     name: RepositoryNames;
-    method: UsersRepositoryMethods;
+    method:
+      | UsersRepositoryMethods
+      | CollectionCategoriesRepositoryMethods
+      | CollectionsRepositoryMethods
+      | FlashcardsRepositoryMethods;
     externalName?: 'prisma';
   };
 };
 
 export enum RepositoryNames {
-  USERS = 'users'
+  USERS = 'users',
+  FLASHCARDS = 'flashcards',
+  COLLECTIONS = 'collections',
+  COLLECTION_CATEGORIES = 'collection categories'
 }
 
 export enum UsersRepositoryMethods {
   FIND_BY_EMAIL = 'find by email',
+  FIND_BY_ID = 'find by id',
+  SAVE = 'save'
+}
+
+export enum CollectionCategoriesRepositoryMethods {
+  FIND_BY_ID = 'find by id'
+}
+
+export enum CollectionsRepositoryMethods {
+  FIND_BY_ID = 'find by id',
+  FIND_MANY_BY_OWNER = 'find many by owner',
+  SAVE = 'save'
+}
+
+export enum FlashcardsRepositoryMethods {
+  FIND_MANY_BY_COLLECTION = 'find many by collection',
   SAVE = 'save'
 }
 

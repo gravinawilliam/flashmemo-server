@@ -21,7 +21,8 @@ export enum PasswordProviderMethods {
 }
 
 export enum TokenProviderMethods {
-  GENERATE_JWT = 'generate jwt'
+  GENERATE_JWT = 'generate jwt',
+  VERIFY_JWT = 'verify jwt'
 }
 export enum CryptoProviderMethods {
   GENERATE_ID = 'generate id'

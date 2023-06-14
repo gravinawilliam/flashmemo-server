@@ -8,8 +8,6 @@ import { ISendLogErrorLoggerProvider } from '@contracts/providers/logger/send-lo
 
 import { CryptoProviderMethods, ProviderError, ProvidersNames } from '@errors/_shared/provider.error';
 
-import { Id } from '@value-objects/id.value-object';
-
 import { failure, success } from '@shared/utils/either.util';
 
 export class UuidCryptoProvider implements IGenerateIdCryptoProvider {
@@ -17,7 +15,7 @@ export class UuidCryptoProvider implements IGenerateIdCryptoProvider {
 
   public generateId(): GenerateIdCryptoProviderDTO.Result {
     try {
-      return success({ id: new Id({ id: v4() }) });
+      return success({ id: v4() });
     } catch (error: any) {
       const errorProvider = new ProviderError({
         error,
