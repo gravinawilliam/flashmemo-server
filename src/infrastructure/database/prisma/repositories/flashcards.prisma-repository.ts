@@ -90,7 +90,6 @@ export class FlashcardsPrismaRepository implements IFindByCollectionFlashcardsRe
             flashcardId: created.id,
             text: response.text,
             isCorrect: response.isCorrect,
-            ownerId: parameters.flashcard.owner.id,
             id: idCreated
           };
         })

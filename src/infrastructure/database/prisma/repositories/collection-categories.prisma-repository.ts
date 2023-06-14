@@ -25,8 +25,6 @@ export class CollectionCategoriesPrismaRepository implements IFindByIdCollection
         where: { id: parameters.collectionCategory.id }
       });
 
-      console.log(found);
-
       if (found === null) return success({ collectionCategory: undefined });
 
       return success({ collectionCategory: { id: found.id } });
