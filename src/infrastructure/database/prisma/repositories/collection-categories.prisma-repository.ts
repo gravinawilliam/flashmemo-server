@@ -21,9 +21,11 @@ export class CollectionCategoriesPrismaRepository implements IFindByIdCollection
     parameters: FindByIdCollectionCategoriesRepositoryDTO.Parameters
   ): FindByIdCollectionCategoriesRepositoryDTO.Result {
     try {
-      const found = await this.prisma.collectionsTable.findFirst({
+      const found = await this.prisma.collectionCategoriesTable.findFirst({
         where: { id: parameters.collectionCategory.id }
       });
+
+      console.log(found);
 
       if (found === null) return success({ collectionCategory: undefined });
 
