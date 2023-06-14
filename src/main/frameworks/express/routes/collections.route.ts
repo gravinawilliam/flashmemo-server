@@ -8,6 +8,6 @@ import { adapterRoute } from '@main/frameworks/express/adapters/express-router.a
 const router: Router = Router();
 
 router.post('/create', adapterRoute(makeCreateCollectionController()));
-router.post('/list', adapterRoute(makeListCollectionsController()));
+router.get('/list', adapterRoute(makeListCollectionsController()));
 
 export default router;

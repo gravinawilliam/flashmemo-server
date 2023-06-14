@@ -8,6 +8,6 @@ import { adapterRoute } from '@main/frameworks/express/adapters/express-router.a
 const router: Router = Router();
 
 router.post('/create', adapterRoute(makeCreateFlashcardController()));
-router.post('/list', adapterRoute(makeListFlashcardsController()));
+router.get('/list', adapterRoute(makeListFlashcardsController()));
 
 export default router;
