@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 
 import { IGenerateIdCryptoProvider } from '@contracts/providers/crypto/generate-id.crypto-provider';
 import { ISendLogErrorLoggerProvider } from '@contracts/providers/logger/send-log-error-logger.provider';
@@ -253,12 +254,9 @@ export class DecksPrismaRepository
       const flashcards: { id: string }[] = [];
 
       for await (const flashcard of parameters.deck.flashcards) {
-        const resultUuid = this.cryptoProvider.generateId();
-        if (resultUuid.isFailure()) return failure(resultUuid.value);
-        const { id: uuid } = resultUuidProvider.value;
-
-        flashcards.push({ id: uuid });
-
+        const uuid = crypto.randomUUID();
+        flashcards.push({ id: flashcard.id });
+        console.log(flashcard.id);
         await this.prisma.deckFlashcardsTable.create({
           data: {
             id: uuid,
