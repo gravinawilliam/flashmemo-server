@@ -20,8 +20,10 @@ model UsersTable {
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
 
-  CollectionsTable CollectionsTable[]
-  FlashcardsTable  FlashcardsTable[]
+  CollectionsTable    CollectionsTable[]
+  FlashcardsTable     FlashcardsTable[]
+  DecksTable          DecksTable[]
+  DeckFlashcardsTable DeckFlashcardsTable[]
 
   @@map("users")
 }
@@ -54,14 +56,16 @@ model CollectionsTable {
   category        CollectionCategoriesTable @relation(fields: [categoryId], references: [id])
   owner           UsersTable                @relation(fields: [ownerId], references: [id])
   FlashcardsTable FlashcardsTable[]
+  DecksTable      DecksTable[]
 
   @@map("collections")
 }
 
 model FlashcardsTable {
-  front        String @db.VarChar()
-  ownerId      String @map("owner_id") @db.VarChar()
-  collectionId String @map("collection_id") @db.VarChar()
+  front        String  @db.VarChar()
+  ownerId      String  @map("owner_id") @db.VarChar()
+  collectionId String  @map("collection_id") @db.VarChar()
+  isAnswered   Boolean @db.Boolean()
 
   id        String    @id @unique @db.VarChar()
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
@@ -71,21 +75,60 @@ model FlashcardsTable {
   owner                   UsersTable                @relation(fields: [ownerId], references: [id])
   collection              CollectionsTable          @relation(fields: [collectionId], references: [id])
   FlashcardResponsesTable FlashcardResponsesTable[]
+  DeckFlashcardsTable     DeckFlashcardsTable[]
 
   @@map("flashcards")
 }
 
 model FlashcardResponsesTable {
-  text        String  @db.VarChar()
-  flashcardId String  @map("flashcard_id") @db.VarChar()
-  isCorrect   Boolean @map("is_correct") @db.Boolean()
+  text            String    @db.VarChar()
+  flashcardId     String    @map("flashcard_id") @db.VarChar()
+  isCorrect       Boolean   @map("is_correct") @db.Boolean()
+  answeredAt      DateTime? @map("answered_at") @db.Timestamptz()
 
   id        String    @id @unique @db.VarChar()
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
 
-  flashcard FlashcardsTable @relation(fields: [flashcardId], references: [id])
+  flashcard    FlashcardsTable @relation(fields: [flashcardId], references: [id])
+  decksTableId String?         @db.VarChar()
 
   @@map("flashcard_responses")
+}
+
+model DecksTable {
+  isAnswered   Boolean @db.Boolean()
+  ownerId      String  @map("owner_id") @db.VarChar()
+  collectionId String  @map("collection_id") @db.VarChar()
+
+  id        String    @id @unique @db.VarChar()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+
+  owner      UsersTable       @relation(fields: [ownerId], references: [id])
+  collection CollectionsTable @relation(fields: [collectionId], references: [id])
+
+  deckFlashcards DeckFlashcardsTable[]
+
+  @@map("decks")
+}
+
+model DeckFlashcardsTable {
+  isWinner    Boolean? @db.Boolean()
+  ownerId     String   @map("owner_id") @db.VarChar()
+  deckId      String   @map("deck_id") @db.VarChar()
+  flashcardId String   @map("flashcard_id") @db.VarChar()
+
+  id        String    @id @unique @db.VarChar()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+
+  owner     UsersTable      @relation(fields: [ownerId], references: [id])
+  deck      DecksTable      @relation(fields: [deckId], references: [id])
+  flashcard FlashcardsTable @relation(fields: [flashcardId], references: [id])
+
+  @@map("deck_flashcards")
 }

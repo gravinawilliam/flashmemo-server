@@ -4,9 +4,17 @@ import crypto from 'crypto';
 import { IGenerateIdCryptoProvider } from '@contracts/providers/crypto/generate-id.crypto-provider';
 import { ISendLogErrorLoggerProvider } from '@contracts/providers/logger/send-log-error-logger.provider';
 import {
+  FindAnsweredFlashcardsRepositoryDTO,
+  IFindAnsweredFlashcardsRepository
+} from '@contracts/repositories/flashcards/find-answered.flashcards-repository';
+import {
   FindByCollectionFlashcardsRepositoryDTO,
   IFindByCollectionFlashcardsRepository
 } from '@contracts/repositories/flashcards/find-many-by-collection.flashcards-repository';
+import {
+  FindUnansweredFlashcardsRepositoryDTO,
+  IFindUnansweredFlashcardsRepository
+} from '@contracts/repositories/flashcards/find-unanswered.flashcards-repository';
 import {
   ISaveFlashcardsRepository,
   SaveFlashcardsRepositoryDTO
@@ -16,12 +24,74 @@ import { FlashcardsRepositoryMethods, RepositoryError, RepositoryNames } from '@
 
 import { failure, success } from '@shared/utils/either.util';
 
-export class FlashcardsPrismaRepository implements IFindByCollectionFlashcardsRepository, ISaveFlashcardsRepository {
+export class FlashcardsPrismaRepository
+  implements
+    IFindByCollectionFlashcardsRepository,
+    ISaveFlashcardsRepository,
+    IFindAnsweredFlashcardsRepository,
+    IFindUnansweredFlashcardsRepository
+{
   constructor(
     private readonly loggerProvider: ISendLogErrorLoggerProvider,
     private readonly cryptoProvider: IGenerateIdCryptoProvider,
     private readonly prisma: PrismaClient
   ) {}
+
+  public async findAnswered(
+    parameters: FindAnsweredFlashcardsRepositoryDTO.Parameters
+  ): FindAnsweredFlashcardsRepositoryDTO.Result {
+    try {
+      const found = await this.prisma.flashcardsTable.findMany({
+        where: { collectionId: parameters.flashcard.collection.id, isAnswered: true },
+        take: parameters.maxFlashcards
+      });
+
+      return success({ flashcardsAnswered: found.map(flashcard => ({ id: flashcard.id })) });
+    } catch (error: any) {
+      const repositoryError = new RepositoryError({
+        error,
+        repository: {
+          name: RepositoryNames.COLLECTIONS,
+          method: FlashcardsRepositoryMethods.FIND_MANY_BY_COLLECTION,
+          externalName: 'prisma'
+        }
+      });
+      this.loggerProvider.sendLogError({
+        message: repositoryError.message,
+        value: error
+      });
+
+      return failure(repositoryError);
+    }
+  }
+
+  public async findUnanswered(
+    parameters: FindUnansweredFlashcardsRepositoryDTO.Parameters
+  ): FindUnansweredFlashcardsRepositoryDTO.Result {
+    try {
+      const found = await this.prisma.flashcardsTable.findMany({
+        where: { collectionId: parameters.flashcard.collection.id, isAnswered: false },
+        take: parameters.maxFlashcards
+      });
+
+      return success({ flashcardsUnanswered: found.map(flashcard => ({ id: flashcard.id })) });
+    } catch (error: any) {
+      const repositoryError = new RepositoryError({
+        error,
+        repository: {
+          name: RepositoryNames.COLLECTIONS,
+          method: FlashcardsRepositoryMethods.FIND_MANY_BY_COLLECTION,
+          externalName: 'prisma'
+        }
+      });
+      this.loggerProvider.sendLogError({
+        message: repositoryError.message,
+        value: error
+      });
+
+      return failure(repositoryError);
+    }
+  }
 
   public async findManyByCollection(
     parameters: FindByCollectionFlashcardsRepositoryDTO.Parameters
@@ -75,7 +145,8 @@ export class FlashcardsPrismaRepository implements IFindByCollectionFlashcardsRe
           id,
           front: parameters.flashcard.front,
           collectionId: parameters.flashcard.collection.id,
-          ownerId: parameters.flashcard.owner.id
+          ownerId: parameters.flashcard.owner.id,
+          isAnswered: false
         },
         select: {
           id: true

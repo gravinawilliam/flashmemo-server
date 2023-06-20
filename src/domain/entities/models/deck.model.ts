@@ -1,16 +1,11 @@
 import { Collection } from '@models/collection.model';
+import { Flashcard } from '@models/flashcard.model';
 import { User } from '@models/user.model';
 
-export type FlashcardResponse = {
-  text: string;
-  isCorrect: boolean;
+export type Deck = {
   id: string;
-};
-
-export type Flashcard = {
-  id: string;
-  front: string;
-  responses: FlashcardResponse[];
+  flashcards: Pick<Flashcard, 'id'>[];
+  isAnswered: boolean;
   owner: Pick<User, 'id'>;
   collection: Pick<Collection, 'id'>;
 };

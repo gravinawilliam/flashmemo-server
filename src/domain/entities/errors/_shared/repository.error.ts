@@ -9,13 +9,15 @@ type ParametersConstructorDTO = {
       | UsersRepositoryMethods
       | CollectionCategoriesRepositoryMethods
       | CollectionsRepositoryMethods
-      | FlashcardsRepositoryMethods;
+      | FlashcardsRepositoryMethods
+      | DecksRepositoryMethods;
     externalName?: 'prisma';
   };
 };
 
 export enum RepositoryNames {
   USERS = 'users',
+  DECKS = 'users',
   FLASHCARDS = 'flashcards',
   COLLECTIONS = 'collections',
   COLLECTION_CATEGORIES = 'collection categories'
@@ -39,6 +41,15 @@ export enum CollectionsRepositoryMethods {
 
 export enum FlashcardsRepositoryMethods {
   FIND_MANY_BY_COLLECTION = 'find many by collection',
+  SAVE = 'save'
+}
+
+export enum DecksRepositoryMethods {
+  FIND_ALL_UNANSWERED = 'find all unanswered',
+  FIND_DECK_AND_RESPONSES = 'find deck and responses',
+  FIND_UNANSWERED = 'find unanswered',
+  FIND = 'find',
+  UPDATE = 'update',
   SAVE = 'save'
 }
 

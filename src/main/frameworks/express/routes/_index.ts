@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import collections from './collections.route';
+import decks from './decks.route';
 import flashcards from './flashcards.route';
 import healthCheck from './health-check.route';
 import signIn from './sign-in.route';
@@ -13,5 +14,6 @@ routes.use('/sign-up', signUp);
 routes.use('/sign-in', signIn);
 routes.use('/collections', collections);
 routes.use('/flashcards', flashcards);
+routes.use('/decks', decks);
 
 export default routes;

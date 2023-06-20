@@ -1,13 +1,15 @@
 import { ProviderError } from '@errors/_shared/provider.error';
 import { RepositoryError } from '@errors/_shared/repository.error';
 
-import { Flashcard } from '@models/flashcard.model';
+import { Flashcard, FlashcardResponse } from '@models/flashcard.model';
 
 import { Either } from '@shared/utils/either.util';
 
 export namespace SaveFlashcardsRepositoryDTO {
   export type Parameters = Readonly<{
-    flashcard: Pick<Flashcard, 'collection' | 'front' | 'owner' | 'responses'>;
+    flashcard: Pick<Flashcard, 'collection' | 'front' | 'owner'> & {
+      responses: Pick<FlashcardResponse, 'isCorrect' | 'text'>[];
+    };
   }>;
 
   export type ResultFailure = Readonly<RepositoryError | ProviderError>;
