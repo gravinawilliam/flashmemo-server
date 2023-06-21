@@ -205,6 +205,7 @@ export class DecksPrismaRepository
           return {
             front: deckFlashcard.flashcard.front,
             id: deckFlashcard.flashcard.id,
+            flashcardDeckId: deckFlashcard.id,
             response: {
               id: response!.id,
               text: response!.text,
@@ -303,7 +304,7 @@ export class DecksPrismaRepository
           }
         });
         await this.prisma.deckFlashcardsTable.update({
-          where: { id: flashcard.id },
+          where: { id: flashcard.flashcardDeckId },
           data: {
             isWinner: flashcard.isWinner
           }

@@ -37,12 +37,14 @@ export class AnswerDeckUseCase extends UseCase<
 
     const flashcards: {
       id: string;
+      flashcardDeckId: string;
       isWinner: boolean;
     }[] = deck.flashcards.map(flashcard => {
       const isWinner = flashcard.response.id === parameters.deck.flashcards.find(f => f.id === flashcard.id)?.responseId;
 
       return {
         isWinner,
+        flashcardDeckId: flashcard.flashcardDeckId,
         id: flashcard.id
       };
     });

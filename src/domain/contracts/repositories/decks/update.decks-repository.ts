@@ -7,7 +7,7 @@ import { Either } from '@shared/utils/either.util';
 export namespace UpdateDecksRepositoryDTO {
   export type Parameters = Readonly<{
     deck: Pick<Deck, 'id' | 'isAnswered'> & {
-      flashcards: { id: string; isWinner: boolean }[];
+      flashcards: { id: string; isWinner: boolean; flashcardDeckId: string }[];
     };
   }>;
 

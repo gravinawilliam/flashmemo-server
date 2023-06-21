@@ -12,6 +12,7 @@ export namespace FindDecksRepositoryDTO {
 
   export type ResultFailure = Readonly<RepositoryError>;
   export type FlashcardType = Pick<Flashcard, 'id' | 'front'> & {
+    flashcardDeckId: string;
     response: Pick<FlashcardResponse, 'isCorrect' | 'id' | 'text'>;
   };
   export type DeckType = Pick<Deck, 'id' | 'collection'> & {
